@@ -68,6 +68,21 @@ public class TweetServiceIT {
 
     @Transactional
     @Test
+    public void testFindTweetById() throws Exception {
+        Tweet t1 = new Tweet();
+        t1.setId(1L);
+        t1.setOpinion("tweet 1");
+
+        tweetRepository.save(t1);
+
+        Tweet tweetFromDb = tweetRepository.findById(1L).get();
+
+        assertEquals(tweetFromDb.getId(), t1.getId());
+        assertEquals(tweetFromDb.getOpinion(), t1.getOpinion());
+    }
+
+    @Transactional
+    @Test
     public void testDeleteTweet() throws Exception {
         tweetService.deleteTweet(1L);
 

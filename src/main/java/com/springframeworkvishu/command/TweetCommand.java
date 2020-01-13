@@ -2,6 +2,8 @@ package com.springframeworkvishu.command;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Data
 @Getter
 @Setter
@@ -10,4 +12,5 @@ import lombok.*;
 public class TweetCommand {
     private Long id;
     private String opinion;
+    private Date date;
 }

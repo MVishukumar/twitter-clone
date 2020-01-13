@@ -8,6 +8,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Slf4j
 @Component
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
@@ -29,9 +31,11 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         log.debug("DODO: Loading initial tweets");
         Tweet tweet1 = new Tweet();
         tweet1.setOpinion("This project is going to be completed");
+        tweet1.setDate(new Date());
 
         Tweet tweet2 = new Tweet();
         tweet2.setOpinion("This project is going to be awesome");
+        tweet2.setDate(new Date());
 
         tweetRepository.save(tweet1);
         tweetRepository.save(tweet2);

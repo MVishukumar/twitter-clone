@@ -16,4 +16,6 @@ public interface TweetService {
 
     TweetCommand editTweet(Long id, TweetCommand tweetCommand);
 
+    TweetCommand findTweetById(Long id);
+
 }

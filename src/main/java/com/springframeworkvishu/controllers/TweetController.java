@@ -9,11 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,11 +76,47 @@ public class TweetController {
 
             return "tweet/tweets";
         }
-
+        command.setDate(new Date());
         TweetCommand tweetCommandSaved = tweetService.save(command);
 
         log.debug("DODO: New tweet saved with id:" + tweetCommandSaved.getId());
         //return "tweet/tweets";
+        return "redirect:/tweets";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String saveOrUpdate(@PathVariable String id, Model model) {
+         log.debug("DODO: Editing existing tweet with id: " + id + " Controller");
+
+         TweetCommand tweetCommand = new TweetCommand();
+         tweetCommand.setId(new Long(id));
+
+         TweetCommand existingTweet = tweetService.findTweetById(new Long(id));
+         tweetCommand.setOpinion(existingTweet.getOpinion());
+
+         model.addAttribute("tweetcommand", tweetCommand);
+
+         return "tweet/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String saveOrUpdate(@PathVariable String id, @Valid @ModelAttribute("tweetcommand") TweetCommand command, BindingResult bindingResult) {
+        log.debug("DODO: Editing existing tweet with id: " + id + " in Post Controller");
+
+        TweetCommand tweetExisting = tweetService.findTweetById(new Long(id));
+        tweetExisting.setOpinion(command.getOpinion());
+
+        tweetService.save(tweetExisting);
+
+        return "redirect:/tweets";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable String id) {
+        log.debug("DODO: Deleting existing tweet with id: " + id + " Controller");
+
+        tweetService.deleteTweet(new Long(id));
+
         return "redirect:/tweets";
     }
 

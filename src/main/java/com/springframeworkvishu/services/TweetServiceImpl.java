@@ -5,9 +5,11 @@ import com.springframeworkvishu.domain.Tweet;
 import com.springframeworkvishu.mappers.TweetMapper;
 import com.springframeworkvishu.repositories.TweetRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -27,7 +29,9 @@ public class TweetServiceImpl implements TweetService {
         log.debug("DODO: Find All Tweet Service");
         Set<TweetCommand> tweetCommands = new HashSet<>();
 
-        tweetRepository.findAll().iterator().forEachRemaining(e -> tweetCommands.add(tweetMapper.tweetToTweetCommand(e)));
+        tweetRepository.findAll(Sort.by(Sort.Direction.DESC, "date"))
+                .iterator()
+                .forEachRemaining(e -> tweetCommands.add(tweetMapper.tweetToTweetCommand(e)));
 
         return tweetCommands;
     }
@@ -59,5 +63,18 @@ public class TweetServiceImpl implements TweetService {
         Tweet savedTweet = tweetRepository.save(tweetFromDb);
 
         return tweetMapper.tweetToTweetCommand(savedTweet);
+    }
+
+    @Override
+    public TweetCommand findTweetById(Long id) {
+        log.debug("DODO: Find Tweet By Id Service");
+
+        Optional<Tweet> tweet = tweetRepository.findById(new Long(id));
+
+        if(tweet.isPresent()) {
+            return tweetMapper.tweetToTweetCommand(tweet.get());
+        } else {
+            return null;
+        }
     }
 }
