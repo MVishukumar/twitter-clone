@@ -32,6 +32,7 @@
             <a th:href="@{'/new/'}">New tweet</a>
         </div>
 
+
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -42,26 +43,33 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th scope="col">Tweet</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
+                                <th scope="col">Tweets</th>
                             </tr>
                             </thead>
                             <tr th:remove="all">
-                                <td>Hello example</td>
-                                <td>10/01/2020</td>
-                                <td><a href="#">Edit</a></td>
-                                <td><a href="#">Delete</a></td>
+                                <td>
+                                    <div class="media">
+                                        <img src="..." class="mr-3" alt="...">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">Media heading 1</h5>
+                                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr th:remove="all">
-                                <td>Hello example 2</td>
-                                <td>10/01/2020</td>
-                                <td><a href="#">Edit</a></td>
-                                <td><a href="#">Delete</a></td>
+                                <td>
+                                    <div class="media">
+                                        <img src="..." class="mr-3" alt="...">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">Media heading 2</h5>
+                                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr th:each="tweet : ${alltweets}">
-                                <td th:text="${tweet.getOpinion()}">Tweet description</td>
+                                <!--<td th:text="${tweet.getOpinion()}">Tweet description</td>
                                 <td th:text="${tweet.getDate()}">10/01/2020</td>
                                 <td>
                                     <a th:href="@{/edit/{id}(id=${tweet.id})}">
@@ -72,12 +80,22 @@
                                     <a th:href="@{/delete/{id}(id=${tweet.id})}">
                                         Delete
                                     </a>
+                                </td>-->
+                                <td>
+                                    <div class="media">
+                                        <img src="../../static/images/twittericon.png" class="mr-3" alt="..." th:src="@{/images/twittericon.png}">
+                                        <div class="media-body">
+                                            <h5 th:text="${tweet.getDate()}" class="mt-0">Media heading 2</h5>
+                                            <p th:text="${tweet.getOpinion()}">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                                        </div>
+                                    </div>
                                 </td>
 
                             </tr>
                         </table>
                     </div>
                 </div>
+
                 <div class="col">
                     Left blank for later use of news
                 </div>
