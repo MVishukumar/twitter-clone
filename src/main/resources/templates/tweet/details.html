@@ -24,14 +24,9 @@
 </head>
 <body>
     <div class="container">
-        <div>
-            <h4 th:text="${@environment.getProperty('ALL_TWEETS_PAGE')}">All tweets page</h4>
-        </div>
-
-        <div>
-            <a th:href="@{'/new/'}">New tweet</a>
-        </div>
-
+        <!--<div>
+            <h4 th:text="${@environment.getProperty('TWEET')}">All tweets page</h4>
+        </div>-->
 
         <div class="container">
             <div class="row">
@@ -43,42 +38,21 @@
                         <table class="table table-dark">
                             <thead>
                             <tr>
-                                <th scope="col">Home</th>
+                                <th scope="col">Tweet</th>
                             </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="tweet : ${alltweets}">
+                                <tr>
                                     <td>
-                                        <div class="media" onclick="myFunction()">
+                                        <div class="media">
                                             <img src="../../static/images/twittericon.png" class="mr-3" alt="..." th:src="@{/images/twittericon.png}">
                                             <div class="media-body">
-                                                <h5 th:text="${tweet.getDate()}" class="mt-0">Media heading 2</h5>
-                                                <p th:text="${tweet.getOpinion()}">abcd</p>
+                                                <h5 th:text="${command.getDate()}" class="mt-0">Media heading 2</h5>
+                                                <p th:text="${command.getOpinion()}">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-sm">
-                                                        <a href="#" th:href="@{'/tweets/' + ${tweet.getId()} + '/like'}">Like</a>
-                                                    </div>
-                                                    <div class="col-sm">
-                                                        <a href="#" th:href="@{'/tweets/' + ${tweet.getId()} + '/comment'}">Comment</a>
-                                                    </div>
-                                                    <div class="col-sm">
-                                                        <a href="#" th:href="@{'/tweets/' + ${tweet.getId()} + '/retweet'}">Retweet</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </td>
-
-
-
                                 </tr>
-
-
                             </tbody>
                         </table>
                     </div>
@@ -90,17 +64,5 @@
             </div>
         </div>
     </div>
-
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-            alert("Hi");
-
-            function myFunction() {
-               //window.location = "https://www.tutorialspoint.com";
-               alert("button clicked");
-               window.location.href = '/tweets/1'; //relative to domain
-            }
-        /*]]*/
-    </script>
 </body>
 </html>

@@ -120,4 +120,15 @@ public class TweetController {
         return "redirect:/tweets";
     }
 
+    @GetMapping("/tweets/{id}")
+    public String serveTweetDetailsPage(@PathVariable String id, Model model) {
+        log.debug("DODO: Reading existing tweet with id: " + id + " Controller");
+
+        TweetCommand command = tweetService.findTweetById(Long.valueOf(id));
+
+        model.addAttribute("command", command);
+
+        return "/tweet/details";
+    }
+
 }
