@@ -41,9 +41,12 @@ public class TweetController {
     @RequestMapping("/tweets")
     public String serveViewAllTweetsPage(Model model) {
         log.debug("DODO: All Tweets Page Controller");
+        //For new tweet form
+        TweetCommand tweetCommand = new TweetCommand();
+        model.addAttribute("tweetcommand", tweetCommand);
 
+        //For displaying all tweets
         Set<TweetCommand> tweetCommands = getAllTweetCommands();
-
         model.addAttribute("alltweets", tweetCommands);
 
         return "tweet/tweets";

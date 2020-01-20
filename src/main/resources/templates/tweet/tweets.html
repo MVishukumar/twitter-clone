@@ -22,8 +22,9 @@
             crossorigin="anonymous"
             th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
 </head>
-<body>
+<body class="bg-light">
     <div class="container">
+
         <div>
             <h4 th:text="${@environment.getProperty('ALL_TWEETS_PAGE')}">All tweets page</h4>
         </div>
@@ -40,13 +41,25 @@
                 </div>
                 <div class="col-6">
                     <div>
-                        <table class="table table-dark table-hover">
+                        <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th scope="col">Home</th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <div class="container">
+                                        <form th:object="${tweetcommand}" th:action="@{/new/}" method="post">
+                                            <div class="form-group">
+                                                <input type="hidden" th:field="*{id}"/>
+                                                <label for="exampleFormControlTextarea1"><strong>New tweet</strong></label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{opinion}" rows="3" placeholder="Write here..."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary mb-2">Tweet</button>
+                                        </form>
+                                    </div>
+                                </tr>
                                 <tr th:each="tweet : ${alltweets}">
                                     <td>
                                         <div class="media" th:onclick="'javascript:myFunction(' + ${tweet.id} + ');'">
@@ -67,16 +80,42 @@
                                                     <li class="list-inline-item"></li>
                                                     <li class="list-inline-item"></li>
                                                     <li class="list-inline-item"><a href="#" th:href="@{'/tweets/' + ${tweet.getId()} + '/retweet'}">Retweet <span class="badge badge-light">11</span></a></li>
+                                                    <li class="list-inline-item"></li>
+                                                    <li class="list-inline-item"></li>
+                                                    <li class="list-inline-item">
+                                                        <!-- Button trigger modal -->
+                                                        <a type="button"
+                                                                data-toggle="modal"
+                                                                data-target="#exampleModalCenter"
+                                                                th:attr="data-object-id='' + ${tweet.getId()} + '', data-object-name=${tweet.getOpinion()}, data-target='#exampleModalCenter'">Delete</a>
+                                                    </li>
                                                 </ul>
                                             </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLongTitle">Delete</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p></p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <!--<button type="button" class="btn btn-primary" id="confirmDelete">Save changes</button>-->
+                                                            <a th:href="@{/tweets/{id}/delete(id=${tweet.getId()})}">
+                                                                <span class="btn btn-danger" value="delete">Delete</span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-
                                     </td>
-
-
-
                                 </tr>
-
 
                             </tbody>
                         </table>
@@ -98,9 +137,17 @@
                //window.location = "https://www.tutorialspoint.com";
                alert("Tweet clicked, id: " + tweetId);
                window.location.href = '/tweets/' + tweetId; //relative to domain
-
-
             }
+
+            $('#exampleModalCenter').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var objectName = button.data('object-name') // Extract info from data-object-name attribute
+
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this)
+                modal.find('.modal-body p').html('Do you want to delete tweet "<strong>' + objectName + '</strong>"?')
+            });
+
         /*]]*/
     </script>
 </body>
