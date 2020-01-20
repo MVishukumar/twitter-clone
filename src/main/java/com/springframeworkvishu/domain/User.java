@@ -3,7 +3,8 @@ package com.springframeworkvishu.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Getter
@@ -11,15 +12,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Tweet {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String opinion;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private String username;
+    private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    Set<Tweet> tweets = new HashSet<>();
 }
