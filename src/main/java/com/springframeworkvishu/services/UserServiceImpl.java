@@ -65,4 +65,13 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.userToUserCommand(user);
     }
+
+    @Override
+    public UserCommand findByUsername(String username) {
+        log.debug("DODO: User, find by username service");
+
+        User user = userRepository.findByUsername(username);
+
+        return userMapper.userToUserCommand(user);
+    }
 }

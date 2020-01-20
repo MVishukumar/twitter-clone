@@ -79,11 +79,24 @@ public class UserServiceIT {
         assertEquals(userRepository.count(), 0);
     }
 
+    @Transactional
     @Test
     public void findById() {
         createNewUser();
 
         UserCommand userCommand = userService.findById(new Long(1L));
+
+        assertEquals(userCommand.getId(), new Long(1L));
+        assertEquals(userCommand.getUsername(), NEW_USERNAME);
+        assertEquals(userCommand.getPassword(), NEW_PASSWORD);
+    }
+
+    @Transactional
+    @Test
+    public void findByUsername() {
+        createNewUser();
+
+        UserCommand userCommand = userService.findByUsername(NEW_USERNAME);
 
         assertEquals(userCommand.getId(), new Long(1L));
         assertEquals(userCommand.getUsername(), NEW_USERNAME);

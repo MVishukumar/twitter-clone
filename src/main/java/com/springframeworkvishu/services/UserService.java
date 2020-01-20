@@ -7,4 +7,5 @@ public interface UserService {
     UserCommand editPassword(Long id, String newPassword);
     void deleteUser(Long id);
     UserCommand findById(Long id);
+    UserCommand findByUsername(String username);
 }
