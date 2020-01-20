@@ -54,7 +54,7 @@
                                             <div class="form-group">
                                                 <input type="hidden" th:field="*{id}"/>
                                                 <label for="exampleFormControlTextarea1"><strong>New tweet</strong></label>
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{opinion}" rows="3" placeholder="Write here..."></textarea>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{opinion}" rows="3" placeholder="What's happening...?"></textarea>
                                             </div>
                                             <button type="submit" class="btn btn-primary mb-2">Tweet</button>
                                         </form>
@@ -107,7 +107,7 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             <!--<button type="button" class="btn btn-primary" id="confirmDelete">Save changes</button>-->
-                                                            <a th:href="@{/tweets/{id}/delete(id=${tweet.getId()})}">
+                                                            <a th:href="@{/delete/{id}(id=${tweet.getId()})}">
                                                                 <span class="btn btn-danger" value="delete">Delete</span></a>
                                                         </div>
                                                     </div>
