@@ -19,6 +19,7 @@ public class User {
 
     private String username;
     private String password;
+    private String email;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     Set<Tweet> tweets = new HashSet<>();

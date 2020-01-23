@@ -8,4 +8,5 @@ public interface UserService {
     void deleteUser(Long id);
     UserCommand findById(Long id);
     UserCommand findByUsername(String username);
+    UserCommand findByEmail(String email);
 }

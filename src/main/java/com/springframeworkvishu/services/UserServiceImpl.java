@@ -74,4 +74,13 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.userToUserCommand(user);
     }
+
+    @Override
+    public UserCommand findByEmail(String email) {
+        log.debug("DODO: User, find by email service");
+
+        User user = userRepository.findByEmail(email);
+
+        return userMapper.userToUserCommand(user);
+    }
 }

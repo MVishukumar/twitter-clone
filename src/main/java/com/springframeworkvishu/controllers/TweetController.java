@@ -11,9 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -39,8 +41,19 @@ public class TweetController {
     }
 
     @RequestMapping("/tweets")
-    public String serveViewAllTweetsPage(Model model) {
+    public String serveViewAllTweetsPage(Model model, HttpSession session) {
         log.debug("DODO: All Tweets Page Controller");
+        //Check logged in user
+        List<String> loggedInUsers = (List<String>) session.getAttribute("LOGGED_IN_USER");
+        if(loggedInUsers == null) {
+            log.debug("DODO: No logged in user, should be redirected to Login Page");
+        } else {
+            log.debug("DODO: User logged in:");
+            loggedInUsers.forEach(userName -> {
+                System.out.println(userName);
+            } );
+        }
+
         //For new tweet form
         TweetCommand tweetCommand = new TweetCommand();
         model.addAttribute("tweetcommand", tweetCommand);

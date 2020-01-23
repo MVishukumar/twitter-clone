@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 public class UserServiceIT {
 
     private final String NEW_USERNAME = "BOB";
+    private final String NEW_USEREMAIL = "BOB@example.com";
     private final String NEW_PASSWORD = "BOBPASSWORD";
     private final String NEW_PASSWORD_EDITED = "BOBPASSWORDEDITED";
 
@@ -37,12 +38,14 @@ public class UserServiceIT {
         newUser.setId(1L);
         newUser.setUsername(NEW_USERNAME);
         newUser.setPassword(NEW_PASSWORD);
+        newUser.setEmail(NEW_USEREMAIL);
 
         UserCommand userSaved = userService.createNewUser(userMapper.userToUserCommand(newUser));
 
         assertEquals(newUser.getId(), userSaved.getId());
         assertEquals(NEW_USERNAME, userSaved.getUsername());
         assertEquals(NEW_PASSWORD, userSaved.getPassword());
+        assertEquals(NEW_USEREMAIL, userSaved.getEmail());
     }
 
     @Transactional
@@ -101,5 +104,18 @@ public class UserServiceIT {
         assertEquals(userCommand.getId(), new Long(1L));
         assertEquals(userCommand.getUsername(), NEW_USERNAME);
         assertEquals(userCommand.getPassword(), NEW_PASSWORD);
+    }
+
+    @Transactional
+    @Test
+    public void findByEmailId() {
+        createNewUser();
+
+        UserCommand userCommand = userService.findByEmail(NEW_USEREMAIL);
+
+        assertEquals(userCommand.getId(), new Long(1L));
+        assertEquals(userCommand.getUsername(), NEW_USERNAME);
+        assertEquals(userCommand.getPassword(), NEW_PASSWORD);
+        assertEquals(userCommand.getEmail(), NEW_USEREMAIL);
     }
 }

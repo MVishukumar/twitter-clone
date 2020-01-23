@@ -37,12 +37,12 @@ public class TweetServiceIT {
     @Test
     public void testSavingTweet() throws Exception {
         Tweet tweet = new Tweet();
-        tweet.setId(1L);
+        //tweet.setId(1L);
         tweet.setOpinion("Test tweet");
 
         Tweet savedTweet = tweetMapper.tweetCommandToTweet(tweetService.save(tweetMapper.tweetToTweetCommand(tweet)));
 
-        assertEquals(new Long(1L), savedTweet.getId());
+        assertEquals(new Long(3L), savedTweet.getId()); //2 tweet objects will be saved during init
         assertEquals(new String("Test tweet"), savedTweet.getOpinion());
     }
 
@@ -81,27 +81,32 @@ public class TweetServiceIT {
         assertEquals(tweetFromDb.getOpinion(), t1.getOpinion());
     }
 
+
+
+
+    @Transactional
+    @Test
+    public void testUpdateTweet() throws Exception {
+        //testSavingTweet();
+
+        TweetCommand tweetCommand = new TweetCommand();
+        tweetCommand.setOpinion("This is edited");
+
+        TweetCommand tweetCommandSaved = tweetService.editTweet(2L, tweetCommand);
+
+        //Tweet tweetFromDb = tweetRepository.findById(1L).get();
+        TweetCommand tweetFromDb = tweetService.findTweetById(2L);
+        assertEquals(tweetFromDb.getOpinion(), new String("This is edited"));
+        assertEquals(tweetFromDb.getOpinion(), tweetCommandSaved.getOpinion());
+
+    }
+
     @Transactional
     @Test
     public void testDeleteTweet() throws Exception {
         tweetService.deleteTweet(1L);
 
         assertEquals(1, tweetRepository.count()); //1 because 2 will be saved during initial data load
-
-    }
-
-
-    @Transactional
-    @Test
-    public void testUpdateTweet() throws Exception {
-        TweetCommand tweetCommand = new TweetCommand();
-        tweetCommand.setOpinion("This is edited");
-
-        TweetCommand tweetCommandSaved = tweetService.editTweet(1L, tweetCommand);
-
-        Tweet tweetFromDb = tweetRepository.findById(1L).get();
-        assertEquals(tweetFromDb.getOpinion(), new String("This is edited"));
-        assertEquals(tweetFromDb.getOpinion(), tweetCommandSaved.getOpinion());
 
     }
 
