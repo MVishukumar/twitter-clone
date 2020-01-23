@@ -1,10 +1,12 @@
 package com.springframeworkvishu.controllers;
 
 import com.springframeworkvishu.command.TweetCommand;
-import com.springframeworkvishu.domain.Tweet;
+import com.springframeworkvishu.command.UserCommand;
 import com.springframeworkvishu.helpers.Welcome;
 import com.springframeworkvishu.mappers.TweetMapper;
+import com.springframeworkvishu.mappers.UserMapper;
 import com.springframeworkvishu.services.TweetService;
+import com.springframeworkvishu.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +25,14 @@ import java.util.Set;
 public class TweetController {
     private final TweetService tweetService;
     private final TweetMapper tweetMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    public TweetController(TweetService tweetService, TweetMapper tweetMapper) {
+    public TweetController(TweetService tweetService, TweetMapper tweetMapper, UserService userService, UserMapper userMapper) {
         this.tweetService = tweetService;
         this.tweetMapper = tweetMapper;
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @RequestMapping({"", "/", "/index"})
@@ -41,12 +47,20 @@ public class TweetController {
     }
 
     @RequestMapping("/tweets")
-    public String serveViewAllTweetsPage(Model model, HttpSession session) {
+    public String serveViewAllTweetsPage(Model model,
+                                         HttpSession session,
+                                         @ModelAttribute("useremail") String emailId) {
         log.debug("DODO: All Tweets Page Controller");
+
+        log.debug("DODO: Object passed from redirection: " + emailId);
+
         //Check logged in user
         List<String> loggedInUsers = (List<String>) session.getAttribute("LOGGED_IN_USER");
         if(loggedInUsers == null) {
             log.debug("DODO: No logged in user, should be redirected to Login Page");
+            UserCommand userCommand = new UserCommand();
+            model.addAttribute("usercommand", userCommand);
+            return "login";
         } else {
             log.debug("DODO: User logged in:");
             loggedInUsers.forEach(userName -> {
@@ -57,6 +71,9 @@ public class TweetController {
         //For new tweet form
         TweetCommand tweetCommand = new TweetCommand();
         model.addAttribute("tweetcommand", tweetCommand);
+
+        UserCommand loggedInUser = userService.findByEmail(emailId);
+        model.addAttribute("loggedinuser", loggedInUser);
 
         //For displaying all tweets
         Set<TweetCommand> tweetCommands = getAllTweetCommands();
