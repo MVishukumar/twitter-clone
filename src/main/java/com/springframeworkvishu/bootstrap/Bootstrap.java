@@ -1,7 +1,9 @@
 package com.springframeworkvishu.bootstrap;
 
 import com.springframeworkvishu.domain.Tweet;
+import com.springframeworkvishu.domain.User;
 import com.springframeworkvishu.repositories.TweetRepository;
+import com.springframeworkvishu.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -15,9 +17,11 @@ import java.util.Date;
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final TweetRepository tweetRepository;
+    private final UserRepository userRepository;
 
-    public Bootstrap(TweetRepository tweetRepository) {
+    public Bootstrap(TweetRepository tweetRepository, UserRepository userRepository) {
         this.tweetRepository = tweetRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -25,6 +29,19 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.debug("DODO: Loading tweets");
         loadInitialTweets();
+        loadInitialUsers();
+    }
+
+    private void loadInitialUsers() {
+        log.debug("DODO: Loading initial users");
+        User user1 = new User();
+        user1.setUsername("roxanne");
+        user1.setPassword("roxanne");
+        user1.setEmail("roxanne@example.com");
+
+        userRepository.save(user1);
+
+        log.debug("DODO: Total Users Saved: " + userRepository.count());
     }
 
     private void loadInitialTweets() {

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Controller
@@ -54,6 +55,9 @@ public class TweetController {
 
         log.debug("DODO: Object passed from redirection: " + emailId);
 
+        AtomicReference<Boolean> readFromSession = new AtomicReference<>(false);
+        AtomicReference<String> email = new AtomicReference<>();
+
         //Check logged in user
         List<String> loggedInUsers = (List<String>) session.getAttribute("LOGGED_IN_USER");
         if(loggedInUsers == null) {
@@ -63,17 +67,30 @@ public class TweetController {
             return "login";
         } else {
             log.debug("DODO: User logged in:");
-            loggedInUsers.forEach(userName -> {
-                System.out.println(userName);
+            log.debug("DODO: Active users:" + loggedInUsers.size());
+            loggedInUsers.forEach(userEmail -> {
+                log.debug("DODO: " + userEmail);
+                readFromSession.set(true);
+                log.debug("DODO: Read from session is set to true");
+                email.set(userEmail);
+                log.debug("DODO: Email set:" + email.get());
             } );
+
+
+            UserCommand userCommand = userService.findByEmail(email.get());
+            model.addAttribute("loggedinuser", userCommand);
+            log.debug("DODO: " + userCommand);
         }
 
         //For new tweet form
         TweetCommand tweetCommand = new TweetCommand();
         model.addAttribute("tweetcommand", tweetCommand);
 
-        UserCommand loggedInUser = userService.findByEmail(emailId);
-        model.addAttribute("loggedinuser", loggedInUser);
+        if(readFromSession.get() == false) {
+            log.debug("DODO: User session closed, reading from model attribute.");
+            UserCommand loggedInUser = userService.findByEmail(emailId);
+            model.addAttribute("loggedinuser", loggedInUser);
+        }
 
         //For displaying all tweets
         Set<TweetCommand> tweetCommands = getAllTweetCommands();
