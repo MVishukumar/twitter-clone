@@ -2,7 +2,9 @@ package com.springframeworkvishu.services;
 
 import com.springframeworkvishu.domain.Tweet;
 import com.springframeworkvishu.mappers.TweetMapper;
+import com.springframeworkvishu.mappers.UserMapper;
 import com.springframeworkvishu.repositories.TweetRepository;
+import com.springframeworkvishu.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,11 +28,17 @@ public class TweetServiceImplTest {
     @Mock
     TweetMapper tweetMapper;
 
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    UserMapper userMapper;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        tweetService = new TweetServiceImpl(tweetRepository, tweetMapper);
+        tweetService = new TweetServiceImpl(tweetRepository, tweetMapper, userRepository, userMapper);
     }
 
     @Test

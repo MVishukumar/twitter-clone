@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         log.debug("DODO: User, delete service");
+        
         userRepository.delete(userRepository.findById(id).get());
     }
 

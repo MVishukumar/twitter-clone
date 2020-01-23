@@ -1,9 +1,13 @@
 package com.springframeworkvishu.services;
 
 import com.springframeworkvishu.command.TweetCommand;
+import com.springframeworkvishu.command.UserCommand;
 import com.springframeworkvishu.domain.Tweet;
+import com.springframeworkvishu.domain.User;
 import com.springframeworkvishu.mappers.TweetMapper;
+import com.springframeworkvishu.mappers.UserMapper;
 import com.springframeworkvishu.repositories.TweetRepository;
+import com.springframeworkvishu.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,14 @@ import java.util.Set;
 public class TweetServiceImpl implements TweetService {
     private final TweetRepository tweetRepository;
     private final TweetMapper tweetMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public TweetServiceImpl(TweetRepository tweetRepository, TweetMapper tweetMapper) {
+    public TweetServiceImpl(TweetRepository tweetRepository, TweetMapper tweetMapper, UserRepository userRepository, UserMapper userMapper) {
         this.tweetRepository = tweetRepository;
         this.tweetMapper = tweetMapper;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
 
@@ -37,11 +45,17 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public TweetCommand save(TweetCommand tweet) {
+    public TweetCommand save(TweetCommand tweet, UserCommand userCommand) {
         log.debug("DODO: Save Tweet Service");
 
+        Tweet tweet1 = tweetMapper.tweetCommandToTweet(tweet);
+        User user = userMapper.userCommandToUser(userCommand);
+
+        tweet1.setUser(user);
+        user.getTweets().add(tweet1);
+
         TweetCommand savedTweet = tweetMapper.tweetToTweetCommand(
-                tweetRepository.save(tweetMapper.tweetCommandToTweet(tweet))
+                tweetRepository.save(tweet1)
         );
 
         return savedTweet;

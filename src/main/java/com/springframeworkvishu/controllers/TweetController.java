@@ -13,12 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
@@ -116,8 +114,12 @@ public class TweetController {
     }
 
     @PostMapping("/new")
-    public String saveOrUpdate(@Valid @ModelAttribute("tweetcommand") TweetCommand command, BindingResult bindingResult){
+    public String saveOrUpdate(@Valid @ModelAttribute("tweetcommand") TweetCommand command,
+                               BindingResult bindingResult,
+                               HttpServletRequest request){
         log.debug("DODO: Saving New Tweet Controller");
+        AtomicReference<String> email = new AtomicReference<>();
+
         if(bindingResult.hasErrors()){
             log.debug("DODO: Error saving new tweet");
             bindingResult.getAllErrors().forEach(objectError -> {
@@ -126,8 +128,26 @@ public class TweetController {
 
             return "tweet/tweets";
         }
+
+        //Check user session
+        List<String> loggedInUsers = (List<String>) request.getSession().getAttribute("LOGGED_IN_USER");
+        if (loggedInUsers == null) {
+            log.debug("DODO: User not logged in, redirecting to login page");
+            return "redirect:/login";
+        }
+
+
+        loggedInUsers.forEach(userEmail -> {
+            email.set(userEmail);
+        });
+
+        log.debug("DODO: Logged in users: " + loggedInUsers);
+        log.debug("DODO: Logged in user email: " + email.get());
+        UserCommand userCommand = userService.findByEmail(email.get());
+
         command.setDate(new Date());
-        TweetCommand tweetCommandSaved = tweetService.save(command);
+        //command.setUser(userMapper.userCommandToUser(userCommand));
+        TweetCommand tweetCommandSaved = tweetService.save(command, userCommand);
 
         log.debug("DODO: New tweet saved with id:" + tweetCommandSaved.getId());
         //return "tweet/tweets";
@@ -156,7 +176,7 @@ public class TweetController {
         TweetCommand tweetExisting = tweetService.findTweetById(new Long(id));
         tweetExisting.setOpinion(command.getOpinion());
 
-        tweetService.save(tweetExisting);
+        //tweetService.save(tweetExisting);
 
         return "redirect:/tweets";
     }

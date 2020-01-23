@@ -28,8 +28,8 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.debug("DODO: Loading tweets");
-        loadInitialTweets();
         loadInitialUsers();
+        loadInitialTweets();
     }
 
     private void loadInitialUsers() {
@@ -53,6 +53,11 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         Tweet tweet2 = new Tweet();
         tweet2.setOpinion("This project is going to be awesome");
         tweet2.setDate(new Date());
+
+        User user = userRepository.findByUsername("roxanne");
+
+        tweet1.setUser(user);
+        tweet2.setUser(user);
 
         tweetRepository.save(tweet1);
         tweetRepository.save(tweet2);

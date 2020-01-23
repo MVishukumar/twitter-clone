@@ -1,5 +1,6 @@
 package com.springframeworkvishu.command;
 
+import com.springframeworkvishu.domain.User;
 import lombok.*;
 
 import java.util.Date;
@@ -13,4 +14,5 @@ public class TweetCommand {
     private Long id;
     private String opinion;
     private Date date;
+    private User user;
 }

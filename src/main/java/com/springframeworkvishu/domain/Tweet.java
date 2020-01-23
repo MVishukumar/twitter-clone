@@ -20,6 +20,7 @@ public class Tweet {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "fk_tweet")
     private User user;
 }
