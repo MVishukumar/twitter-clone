@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@EqualsAndHashCode(exclude = {"tweet"})
+@EqualsAndHashCode(exclude = {"tweets"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +23,6 @@ public class User {
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "user")
+    @ToString.Exclude
     Set<Tweet> tweets = new HashSet<>();
 }

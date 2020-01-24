@@ -82,7 +82,7 @@ public class TweetServiceIT {
         tweetService.findAllTweets().iterator().forEachRemaining(e -> allTweets.add(tweetMapper.tweetCommandToTweet(e)));
 
         assertEquals(allTweets.size(), tweetRepository.count());
-        assertEquals(2, tweetRepository.count()); //4 because 2 will be saved during intial data load
+        assertEquals(4, tweetRepository.count()); //4 because 2 will be saved during intial data load
     }
 
     @Transactional

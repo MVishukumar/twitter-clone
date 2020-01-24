@@ -22,5 +22,6 @@ public class Tweet {
 
     @ManyToOne
     @JoinColumn(name = "fk_tweet")
+    @ToString.Exclude
     private User user;
 }
