@@ -70,7 +70,7 @@ public class UserServiceIT {
         assertEquals(editedUserSaved.getPassword(), NEW_PASSWORD_EDITED);
     }
 
-    /*
+
     @Transactional
     @Test
     public void deleteUser() {
@@ -81,7 +81,7 @@ public class UserServiceIT {
         userService.deleteUser(1L);
 
         assertEquals(userRepository.count(), 1);
-    }*/
+    }
 
     @Transactional
     @Test
