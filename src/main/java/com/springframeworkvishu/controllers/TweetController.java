@@ -48,6 +48,7 @@ public class TweetController {
     @RequestMapping("/tweets")
     public String serveViewAllTweetsPage(Model model,
                                          HttpSession session,
+                                         HttpServletRequest request,
                                          @ModelAttribute("useremail") String emailId) {
         log.debug("DODO: All Tweets Page Controller");
 
@@ -59,10 +60,19 @@ public class TweetController {
         //Check logged in user
         List<String> loggedInUsers = (List<String>) session.getAttribute("LOGGED_IN_USER");
         if(loggedInUsers == null) {
-            log.debug("DODO: No logged in user, should be redirected to Login Page");
-            UserCommand userCommand = new UserCommand();
-            model.addAttribute("usercommand", userCommand);
-            return "login";
+            log.debug("DODO: No logged in user. Email attribute passed: " + emailId);
+            if("".equalsIgnoreCase(emailId) || emailId == null) {
+                log.debug("DODO: No flash attribute as well for email, should be redirected to login page.");
+                UserCommand userCommand = new UserCommand();
+                model.addAttribute("usercommand", userCommand);
+                return "login";
+            } else {
+                log.debug("DODO: No email attribute passed.");
+                UserCommand command = userService.findByEmail(emailId);
+                loggedInUsers = new ArrayList<>();
+                loggedInUsers.add(command.getEmail());
+                request.getSession().setAttribute("LOGGED_IN_USER", loggedInUsers);
+            }
         } else {
             log.debug("DODO: User logged in:");
             log.debug("DODO: Active users:" + loggedInUsers.size());
@@ -83,6 +93,7 @@ public class TweetController {
         //For new tweet form
         TweetCommand tweetCommand = new TweetCommand();
         model.addAttribute("tweetcommand", tweetCommand);
+
 
         if(readFromSession.get() == false) {
             log.debug("DODO: User session closed, reading from model attribute.");

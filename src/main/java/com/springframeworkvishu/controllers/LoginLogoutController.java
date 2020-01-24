@@ -2,6 +2,8 @@ package com.springframeworkvishu.controllers;
 
 import com.springframeworkvishu.command.TweetCommand;
 import com.springframeworkvishu.command.UserCommand;
+import com.springframeworkvishu.domain.User;
+import com.springframeworkvishu.helpers.Welcome;
 import com.springframeworkvishu.mappers.TweetMapper;
 import com.springframeworkvishu.mappers.UserMapper;
 import com.springframeworkvishu.services.TweetService;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -67,8 +71,40 @@ public class LoginLogoutController {
 
         redirectAttributes.addFlashAttribute("useremail", savedUserCommand.getEmail());
 
-
-        //return "tweet/tweets";
         return "redirect:/tweets";
     }
+
+    @PostMapping("/loginexisting")
+    public String validateLogin(@Valid @ModelAttribute("usercommand") UserCommand command,
+                                BindingResult bindingResult,
+                                HttpServletRequest request,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        log.debug("DODO: Login existing user controller Controller");
+        String existingUserEmailId = command.getEmail();
+
+        UserCommand userCommand = userService.findByEmail(existingUserEmailId);
+        if(userCommand == null) {
+            log.debug("DODO: User " + command.getEmail() + " does not existing, redirecting to signup/login page");
+            return "redirect:/login";
+        } else {
+            log.debug("DODO: User " + command.getEmail() + " found in db. Log in success");
+            redirectAttributes.addFlashAttribute("useremail", command.getEmail());
+            return "redirect:/tweets";
+        }
+    }
+
+
+    @PostMapping("/logout")
+    public String logout(@Valid @ModelAttribute("loggedinuser") UserCommand command,
+                         BindingResult bindingResult,
+                         HttpServletRequest request) {
+        log.debug("DODO: Logout user Controller");
+        log.debug("DODO: About to log out user: " + command.getEmail());
+
+        request.getSession().invalidate();
+
+        return "redirect:/";
+    }
+
 }
