@@ -68,7 +68,7 @@
                                         <div class="media" th:onclick="'javascript:myFunction(' + ${tweet.id} + ');'">
                                             <img src="../../static/images/twittericon.png" class="mr-3" alt="..." th:src="@{/images/twittericon.png}">
                                             <div class="media-body">
-                                                <h5 th:text="${tweet.getDate()}" class="mt-0">Media heading 2</h5>
+                                                <h5 th:text="${tweet.getUser().getUsername()}" class="mt-0">Media heading 2</h5>
                                                 <p th:text="${tweet.getOpinion()}">abcd</p>
                                             </div>
                                         </div>

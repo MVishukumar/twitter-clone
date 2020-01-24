@@ -41,6 +41,12 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
         userRepository.save(user1);
 
+        User user2 = new User();
+        user2.setUsername("rosy");
+        user2.setPassword("rosy");
+        user2.setEmail("rosy@example.com");
+
+        userRepository.save(user2);
         log.debug("DODO: Total Users Saved: " + userRepository.count());
     }
 
@@ -54,10 +60,11 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         tweet2.setOpinion("This project is going to be awesome");
         tweet2.setDate(new Date());
 
-        User user = userRepository.findByUsername("roxanne");
+        User user1 = userRepository.findByUsername("roxanne");
+        User user2 = userRepository.findByUsername("rosy");
 
-        tweet1.setUser(user);
-        tweet2.setUser(user);
+        tweet1.setUser(user1);
+        tweet2.setUser(user2);
 
         tweetRepository.save(tweet1);
         tweetRepository.save(tweet2);

@@ -33,15 +33,16 @@
 </head>
 <body class="container">
 
-<div>
-    <form>
-        <div class="form-group">
-            <label for="exampleFormControlTextarea1">Example textarea</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
-    </form>
-</div>
+<form class="form-inline">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Username/Email id">
+    </div>
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="inputPassword2" class="sr-only">Password</label>
+        <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Login</button>
+</form>
 
 
 <script th:inline="javascript">
