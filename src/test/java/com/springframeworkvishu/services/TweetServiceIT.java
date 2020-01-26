@@ -7,8 +7,10 @@ import com.springframeworkvishu.mappers.TweetMapper;
 import com.springframeworkvishu.mappers.UserMapper;
 import com.springframeworkvishu.repositories.TweetRepository;
 import com.springframeworkvishu.repositories.UserRepository;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,6 +26,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TweetServiceIT {
 
     public static final String NEW_DESCRIPTION = "New Description";
@@ -48,7 +51,7 @@ public class TweetServiceIT {
 
     @Transactional
     @Test
-    public void testSavingTweet() throws Exception {
+    public void atestSavingTweet() throws Exception {
         Tweet tweet = new Tweet();
         //tweet.setId(1L);
         tweet.setOpinion("Test tweet");
@@ -59,13 +62,13 @@ public class TweetServiceIT {
         Tweet savedTweet = tweetMapper.tweetCommandToTweet(tweetService.save(tweetMapper.tweetToTweetCommand(tweet),
                 userMapper.userToUserCommand(user)));
 
-        assertEquals(new Long(4L), savedTweet.getId()); //2 tweet objects will be saved during init
+        assertEquals(new Long(3L), savedTweet.getId()); //2 tweet objects will be saved during init
         assertEquals(new String("Test tweet"), savedTweet.getOpinion());
     }
 
     @Transactional
     @Test
-    public void testFindAllTweets() throws Exception {
+    public void btestFindAllTweets() throws Exception {
         Tweet tweet = new Tweet();
         //tweet.setId(1L);
         tweet.setOpinion("Test tweet");
@@ -87,7 +90,7 @@ public class TweetServiceIT {
 
     @Transactional
     @Test
-    public void testFindTweetById() throws Exception {
+    public void ctestFindTweetById() throws Exception {
         Tweet t1 = new Tweet();
         t1.setId(3L);
         t1.setOpinion("tweet 1");
@@ -110,7 +113,7 @@ public class TweetServiceIT {
 
     @Transactional
     @Test
-    public void testUpdateTweet() throws Exception {
+    public void dtestUpdateTweet() throws Exception {
         //testSavingTweet();
 
         TweetCommand tweetCommand = new TweetCommand();
@@ -127,10 +130,10 @@ public class TweetServiceIT {
 
     @Transactional
     @Test
-    public void testDeleteTweet() throws Exception {
+    public void etestDeleteTweet() throws Exception {
         tweetService.deleteTweet(1L);
 
-        assertEquals(2, tweetRepository.count()); //1 because 2 will be saved during initial data load
+        assertEquals(3, tweetRepository.count()); //1 because 2 will be saved during initial data load
 
     }
 
