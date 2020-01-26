@@ -1,6 +1,7 @@
 package com.springframeworkvishu.services;
 
 import com.springframeworkvishu.command.TweetCommand;
+import com.springframeworkvishu.command.UserCommand;
 import com.springframeworkvishu.domain.Tweet;
 import com.springframeworkvishu.domain.User;
 import com.springframeworkvishu.mappers.TweetMapper;
@@ -69,23 +70,26 @@ public class TweetServiceIT {
     @Transactional
     @Test
     public void btestFindAllTweets() throws Exception {
-        Tweet tweet = new Tweet();
-        //tweet.setId(1L);
-        tweet.setOpinion("Test tweet");
-        tweet.setDate(new Date());
+        Long beforeCount = Long.valueOf(tweetService.findAllTweets().size());
 
-        User user = userRepository.findByUsername("roxanne");
-        tweet.setUser(user);
+        Tweet t1 = new Tweet();
+        t1.setOpinion("First Tweet");
 
-        Tweet savedTweet = tweetMapper.tweetCommandToTweet(tweetService.save(tweetMapper.tweetToTweetCommand(tweet),
-                userMapper.userToUserCommand(user)));
+        Tweet t2 = new Tweet();
+        t2.setOpinion("Second Tweet");
 
-        Set<Tweet> allTweets = new HashSet<>();
+        User user = new User();
+        user.setUsername("dummyuser");
+        UserCommand userCommand = userService.createNewUser(userMapper.userToUserCommand(user));
 
-        tweetService.findAllTweets().iterator().forEachRemaining(e -> allTweets.add(tweetMapper.tweetCommandToTweet(e)));
+        t1.setUser(user);
+        t2.setUser(user);
 
-        assertEquals(allTweets.size(), tweetRepository.count());
-        assertEquals(4, tweetRepository.count()); //4 because 2 will be saved during intial data load
+        tweetService.save(tweetMapper.tweetToTweetCommand(t1), userCommand);
+        tweetService.save(tweetMapper.tweetToTweetCommand(t2), userCommand);
+
+        Long afterCount = Long.valueOf(tweetService.findAllTweets().size());
+        assertEquals(2, afterCount-beforeCount);
     }
 
     @Transactional
@@ -131,10 +135,26 @@ public class TweetServiceIT {
     @Transactional
     @Test
     public void etestDeleteTweet() throws Exception {
-        tweetService.deleteTweet(1L);
+        Long initialCount = Long.valueOf(tweetService.findAllTweets().size());
 
-        assertEquals(3, tweetRepository.count()); //1 because 2 will be saved during initial data load
+        Tweet tweet = new Tweet();
+        tweet.setOpinion("Test tweet");
 
+
+        User user = new User();
+        user.setUsername("dummyuser");
+        UserCommand userCommand = userService.createNewUser(userMapper.userToUserCommand(user));
+
+
+        tweet.setUser(user);
+
+        TweetCommand tweetCommand = tweetService.save(tweetMapper.tweetToTweetCommand(tweet), userCommand);
+
+        tweetService.deleteTweet(tweetCommand.getId());
+
+        Long finalCount = Long.valueOf(tweetService.findAllTweets().size());
+
+        assertEquals(initialCount, finalCount);
     }
 
 
