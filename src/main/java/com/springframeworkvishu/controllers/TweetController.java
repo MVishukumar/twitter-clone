@@ -202,14 +202,37 @@ public class TweetController {
     }
 
     @GetMapping("/tweets/{id}")
-    public String serveTweetDetailsPage(@PathVariable String id, Model model) {
+    public String serveTweetDetailsPage(@PathVariable String id, Model model,
+                                        HttpServletRequest request) {
         log.debug("DODO: Reading existing tweet with id: " + id + " Controller");
 
         TweetCommand command = tweetService.findTweetById(Long.valueOf(id));
 
         model.addAttribute("command", command);
 
+        String loggedInUserEmail = getLoggedInUser(request);
+
+
+
+        log.debug("DODO: Logged in user: " + loggedInUserEmail);
         return "/tweet/details";
+    }
+
+    private String getLoggedInUser(HttpServletRequest request) {
+        AtomicReference<String> email = new AtomicReference<>();
+
+        List<String> loggedInUsers = (List<String>) request.getSession().getAttribute("LOGGED_IN_USER");
+        if (loggedInUsers == null) {
+            log.debug("DODO: User not logged in, redirecting to login page");
+            return "redirect:/login";
+        }
+
+
+        loggedInUsers.forEach(userEmail -> {
+            email.set(userEmail);
+        });
+
+        return String.valueOf(email);
     }
 
 }
