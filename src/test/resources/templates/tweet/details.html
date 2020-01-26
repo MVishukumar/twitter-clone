@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Twitter-clone</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}">
+
+    <!--<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>-->
+    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <!--<div>
+            <h4 th:text="${@environment.getProperty('TWEET')}">All tweets page</h4>
+        </div>-->
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+<!--
+                    Left blank for later use of hashtags
+-->
+                </div>
+                <div class="col-6">
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Tweet</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="media">
+                                            <img src="../../static/images/twittericon.png" class="mr-3" alt="..." th:src="@{/images/twittericon.png}">
+                                            <div class="media-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h5 th:text="${command.getUser().getUsername()}" class="mt-0">Media heading 2</h5>
+                                                    </div>
+                                                    <div class="col">
+                                                        <small class="text-muted float-right" th:text="${command.getDate().toString()}">10th September 1991</small>
+                                                    </div>
+                                                </div>
+                                                <p th:text="${command.getOpinion()}">abcd</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="container">
+                                            <form th:object="${command}" th:action="@{/tweet/} + ${command.getId()} + @{/comment}" method="post">
+                                                <div class="form-group">
+                                                    <input type="hidden" th:field="*{id}"/>
+                                                    <label for="exampleFormControlTextarea1"><strong>Add Comment</strong></label>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{opinion}" rows="3" placeholder="What's happening...?"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary mb-2">Post Comment</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col">
+<!--
+                    Left blank for later use of news
+-->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
