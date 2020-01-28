@@ -222,6 +222,9 @@ public class TweetController {
         CommentCommand commentCommand = new CommentCommand();
         model.addAttribute("commentcommand", commentCommand);
 
+        Set<CommentCommand> allComments = commentService.findAllComments();
+        model.addAttribute("allcomments", allComments);
+
         log.debug("DODO: Logged in user: " + loggedInUserEmail);
         return "/tweet/details";
     }

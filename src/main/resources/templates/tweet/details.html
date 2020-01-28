@@ -78,6 +78,34 @@
                                     </td>
                                 </tr>
 
+                                <tr>
+                                    <td>
+                                        <h6>Comments</h6>
+                                    </td>
+                                </tr>
+
+                                <tr th:each="comment : ${allcomments}">
+                                    <td>
+                                        <div class="container m-2">
+                                            <div class="media">
+                                                <img src="../../static/images/twittericon.png" class="mr-3" alt="..." th:src="@{/images/twittericon.png}">
+                                                <div class="media-body">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h5 th:text="${comment.getUser().getUsername()}" class="mt-0">Media heading 2</h5>
+                                                        </div>
+                                                        <div class="col">
+                                                            <small class="text-muted float-right" th:text="${comment.getDate().toString()}">10th September 1991</small>
+                                                        </div>
+                                                    </div>
+                                                    <p th:text="${comment.getCommentDescription()}">abcd</p>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                        </div>
+                                    </td>
+                                </tr>
+
                             </tbody>
                         </table>
                     </div>
