@@ -74,13 +74,18 @@ public class UserServiceIT {
     @Transactional
     @Test
     public void deleteUser() {
-        createNewUser();
+        long beforeCount = userRepository.count();
 
-        assertEquals(userRepository.count(), 2);
+        User user = new User();
+        user.setUsername("abcd");
+        UserCommand userCommand = userService.createNewUser(userMapper.userToUserCommand(user));
 
-        userService.deleteUser(1L);
 
-        assertEquals(userRepository.count(), 1);
+        userService.deleteUser(userCommand.getId());
+
+        long afterCount = userRepository.count();
+
+        assertEquals(beforeCount, afterCount);
     }
 
     @Transactional
