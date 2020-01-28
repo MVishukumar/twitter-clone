@@ -66,11 +66,11 @@
                                 <tr>
                                     <td>
                                         <div class="container">
-                                            <form th:object="${command}" th:action="@{/tweet/} + ${command.getId()} + @{/comment}" method="post">
+                                            <form th:object="${commentcommand}" th:action="@{/tweet/} + ${command.getId()} + @{/comment}" method="post">
                                                 <div class="form-group">
                                                     <input type="hidden" th:field="*{id}"/>
                                                     <label for="exampleFormControlTextarea1"><strong>Add Comment</strong></label>
-                                                    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{opinion}" rows="3" placeholder="What's happening...?"></textarea>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{commentDescription}" rows="3" placeholder="Want to add comment...?"></textarea>
                                                 </div>
                                                 <button type="submit" class="btn btn-primary mb-2">Post Comment</button>
                                             </form>

@@ -13,6 +13,8 @@ public interface TweetService {
 
     TweetCommand save(TweetCommand tweet, UserCommand userCommand);
 
+    TweetCommand save(TweetCommand tweet);
+
     void deleteTweet(Long id);
 
     TweetCommand editTweet(Long id, TweetCommand tweetCommand);

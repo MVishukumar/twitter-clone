@@ -1,7 +1,9 @@
 package com.springframeworkvishu.bootstrap;
 
+import com.springframeworkvishu.domain.Comment;
 import com.springframeworkvishu.domain.Tweet;
 import com.springframeworkvishu.domain.User;
+import com.springframeworkvishu.repositories.CommentRepository;
 import com.springframeworkvishu.repositories.TweetRepository;
 import com.springframeworkvishu.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +20,12 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
-    public Bootstrap(TweetRepository tweetRepository, UserRepository userRepository) {
+    public Bootstrap(TweetRepository tweetRepository, UserRepository userRepository, CommentRepository commentRepository) {
         this.tweetRepository = tweetRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional
@@ -30,6 +34,26 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         log.debug("DODO: Loading tweets");
         loadInitialUsers();
         loadInitialTweets();
+        loadInitialComments();
+    }
+
+    private void loadInitialComments() {
+        log.debug("DODO: Loading comments");
+        Tweet tweet = tweetRepository.findById(1L).get();
+
+
+        Comment comment = new Comment();
+        comment.setCommentDescription("First comment");
+        comment.setDate(new Date());
+        comment.setTweet(tweet);
+        comment.setUser(tweet.getUser());
+        commentRepository.save(comment);
+
+        tweet.getComments().add(comment);
+
+        tweetRepository.save(tweet);
+
+        log.debug("DODO: Comments saved: " + commentRepository.count());
     }
 
     private void loadInitialUsers() {

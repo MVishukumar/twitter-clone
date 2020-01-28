@@ -8,6 +8,7 @@ import com.springframeworkvishu.repositories.TweetRepository;
 import com.springframeworkvishu.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserCommand createNewUser(UserCommand userCommand) {
         log.debug("DODO: User, create new service");
         User userSaved = userRepository.save(userMapper.userCommandToUser(userCommand));
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserCommand editPassword(Long id, String newPassword) {
         log.debug("DODO: User, edit password service");
         Optional<User> optUserFromDb = userRepository.findById(id);
@@ -59,6 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserCommand findById(Long id) {
         log.debug("DODO: User, find by id service");
 
@@ -68,6 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserCommand findByUsername(String username) {
         log.debug("DODO: User, find by username service");
 
@@ -77,6 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserCommand findByEmail(String email) {
         log.debug("DODO: User, find by email service");
 

@@ -11,6 +11,7 @@ import com.springframeworkvishu.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
+    @Transactional
     public TweetCommand save(TweetCommand tweet, UserCommand userCommand) {
         log.debug("DODO: Save Tweet Service");
 
@@ -62,12 +64,23 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
+    @Transactional
+    public TweetCommand save(TweetCommand tweet) {
+        log.debug("DODO: Save Tweet Service");
+
+        Tweet tweetSaved = tweetRepository.save(tweetMapper.tweetCommandToTweet(tweet));
+
+        return tweetMapper.tweetToTweetCommand(tweetSaved);
+    }
+
+    @Override
     public void deleteTweet(Long id) {
         log.debug("DODO: Delete Tweet Service");
         tweetRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public TweetCommand editTweet(Long id, TweetCommand tweetCommand) {
         log.debug("DODO: Edit Tweet Service");
         Tweet tweetFromDb = tweetRepository.findById(id).get();
@@ -80,6 +93,7 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
+    @Transactional
     public TweetCommand findTweetById(Long id) {
         log.debug("DODO: Find Tweet By Id Service");
 

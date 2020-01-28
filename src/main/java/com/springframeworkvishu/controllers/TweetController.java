@@ -1,10 +1,13 @@
 package com.springframeworkvishu.controllers;
 
+import com.springframeworkvishu.command.CommentCommand;
 import com.springframeworkvishu.command.TweetCommand;
 import com.springframeworkvishu.command.UserCommand;
 import com.springframeworkvishu.helpers.Welcome;
+import com.springframeworkvishu.mappers.CommentMapper;
 import com.springframeworkvishu.mappers.TweetMapper;
 import com.springframeworkvishu.mappers.UserMapper;
+import com.springframeworkvishu.services.CommentService;
 import com.springframeworkvishu.services.TweetService;
 import com.springframeworkvishu.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +29,16 @@ public class TweetController {
     private final TweetMapper tweetMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final CommentService commentService;
+    private final CommentMapper commentMapper;
 
-    public TweetController(TweetService tweetService, TweetMapper tweetMapper, UserService userService, UserMapper userMapper) {
+    public TweetController(TweetService tweetService, TweetMapper tweetMapper, UserService userService, UserMapper userMapper, CommentService commentService, CommentMapper commentMapper) {
         this.tweetService = tweetService;
         this.tweetMapper = tweetMapper;
         this.userService = userService;
         this.userMapper = userMapper;
+        this.commentService = commentService;
+        this.commentMapper = commentMapper;
     }
 
     @RequestMapping({"", "/", "/index"})
@@ -59,9 +66,9 @@ public class TweetController {
 
         //Check logged in user
         List<String> loggedInUsers = (List<String>) session.getAttribute("LOGGED_IN_USER");
-        if(loggedInUsers == null) {
+        if (loggedInUsers == null) {
             log.debug("DODO: No logged in user. Email attribute passed: " + emailId);
-            if("".equalsIgnoreCase(emailId) || emailId == null) {
+            if ("".equalsIgnoreCase(emailId) || emailId == null) {
                 log.debug("DODO: No flash attribute as well for email, should be redirected to login page.");
                 UserCommand userCommand = new UserCommand();
                 model.addAttribute("usercommand", userCommand);
@@ -82,7 +89,7 @@ public class TweetController {
                 log.debug("DODO: Read from session is set to true");
                 email.set(userEmail);
                 log.debug("DODO: Email set:" + email.get());
-            } );
+            });
 
 
             UserCommand userCommand = userService.findByEmail(email.get());
@@ -95,7 +102,7 @@ public class TweetController {
         model.addAttribute("tweetcommand", tweetCommand);
 
 
-        if(readFromSession.get() == false) {
+        if (readFromSession.get() == false) {
             log.debug("DODO: User session closed, reading from model attribute.");
             UserCommand loggedInUser = userService.findByEmail(emailId);
             model.addAttribute("loggedinuser", loggedInUser);
@@ -127,11 +134,11 @@ public class TweetController {
     @PostMapping("/new")
     public String saveOrUpdate(@Valid @ModelAttribute("tweetcommand") TweetCommand command,
                                BindingResult bindingResult,
-                               HttpServletRequest request){
+                               HttpServletRequest request) {
         log.debug("DODO: Saving New Tweet Controller");
         AtomicReference<String> email = new AtomicReference<>();
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             log.debug("DODO: Error saving new tweet");
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
@@ -167,17 +174,17 @@ public class TweetController {
 
     @GetMapping("/edit/{id}")
     public String saveOrUpdate(@PathVariable String id, Model model) {
-         log.debug("DODO: Editing existing tweet with id: " + id + " Controller");
+        log.debug("DODO: Editing existing tweet with id: " + id + " Controller");
 
-         TweetCommand tweetCommand = new TweetCommand();
-         tweetCommand.setId(new Long(id));
+        TweetCommand tweetCommand = new TweetCommand();
+        tweetCommand.setId(new Long(id));
 
-         TweetCommand existingTweet = tweetService.findTweetById(new Long(id));
-         tweetCommand.setOpinion(existingTweet.getOpinion());
+        TweetCommand existingTweet = tweetService.findTweetById(new Long(id));
+        tweetCommand.setOpinion(existingTweet.getOpinion());
 
-         model.addAttribute("tweetcommand", tweetCommand);
+        model.addAttribute("tweetcommand", tweetCommand);
 
-         return "tweet/edit";
+        return "tweet/edit";
     }
 
     @PostMapping("/edit/{id}")
@@ -212,7 +219,8 @@ public class TweetController {
 
         String loggedInUserEmail = getLoggedInUser(request);
 
-
+        CommentCommand commentCommand = new CommentCommand();
+        model.addAttribute("commentcommand", commentCommand);
 
         log.debug("DODO: Logged in user: " + loggedInUserEmail);
         return "/tweet/details";
@@ -235,4 +243,23 @@ public class TweetController {
         return String.valueOf(email);
     }
 
+    @PostMapping("/tweet/{id}/comment")
+    public String saveOrUpdate(@PathVariable String id, @Valid @ModelAttribute("commentcommand") CommentCommand commentCommand
+            , BindingResult bindingResult
+            , HttpServletRequest request) {
+        log.debug("DODO: Comment received: " + commentCommand.getCommentDescription());
+
+        TweetCommand tweetCommand = tweetService.findTweetById(Long.valueOf(id));
+        String userEmail = getLoggedInUser(request);
+        UserCommand userCommand = userService.findByEmail(userEmail);
+
+        log.debug("DODO: Tweet: " + tweetCommand);
+        log.debug("DODO: Logged In Email: " + userEmail);
+        log.debug("DODO: User: " + userCommand);
+
+        CommentCommand commentSaved = commentService.createNewComment(commentCommand, userCommand, tweetCommand);
+
+        log.debug("DODO: New comment saved with ID: " + commentSaved.getId());
+        return "redirect:/";
+    }
 }

@@ -4,8 +4,10 @@ import com.springframeworkvishu.command.TweetCommand;
 import com.springframeworkvishu.command.UserCommand;
 import com.springframeworkvishu.domain.Tweet;
 import com.springframeworkvishu.domain.User;
+import com.springframeworkvishu.mappers.CommentMapper;
 import com.springframeworkvishu.mappers.TweetMapper;
 import com.springframeworkvishu.mappers.UserMapper;
+import com.springframeworkvishu.repositories.CommentRepository;
 import com.springframeworkvishu.repositories.TweetRepository;
 import com.springframeworkvishu.repositories.UserRepository;
 import org.junit.FixMethodOrder;
@@ -21,8 +23,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
@@ -50,21 +51,26 @@ public class TweetServiceIT {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    CommentMapper commentMapper;
+
     @Transactional
     @Test
     public void atestSavingTweet() throws Exception {
+        long initialCount = tweetRepository.count();
         Tweet tweet = new Tweet();
-        //tweet.setId(1L);
         tweet.setOpinion("Test tweet");
 
-        User user = new User();
-        user.setEmail("example@example.com");
+        TweetCommand tweetSaved = tweetService.save(tweetMapper.tweetToTweetCommand(tweet));
 
-        Tweet savedTweet = tweetMapper.tweetCommandToTweet(tweetService.save(tweetMapper.tweetToTweetCommand(tweet),
-                userMapper.userToUserCommand(user)));
-
-        assertEquals(new Long(3L), savedTweet.getId()); //2 tweet objects will be saved during init
-        assertEquals(new String("Test tweet"), savedTweet.getOpinion());
+        assertEquals(initialCount+1, tweetRepository.count());
+        assertEquals(tweetSaved.getOpinion(), "Test tweet");
     }
 
     @Transactional
@@ -78,38 +84,28 @@ public class TweetServiceIT {
         Tweet t2 = new Tweet();
         t2.setOpinion("Second Tweet");
 
-        User user = new User();
-        user.setUsername("dummyuser");
-        UserCommand userCommand = userService.createNewUser(userMapper.userToUserCommand(user));
-
-        t1.setUser(user);
-        t2.setUser(user);
-
-        tweetService.save(tweetMapper.tweetToTweetCommand(t1), userCommand);
-        tweetService.save(tweetMapper.tweetToTweetCommand(t2), userCommand);
+        tweetService.save(tweetMapper.tweetToTweetCommand(t1));
+        tweetService.save(tweetMapper.tweetToTweetCommand(t2));
 
         Long afterCount = Long.valueOf(tweetService.findAllTweets().size());
+
+        Set<TweetCommand> tweetCommands = tweetService.findAllTweets();
+
         assertEquals(2, afterCount-beforeCount);
+        assertTrue(tweetCommands.size() > 0);
+
     }
 
     @Transactional
     @Test
     public void ctestFindTweetById() throws Exception {
-        Tweet t1 = new Tweet();
-        t1.setId(3L);
-        t1.setOpinion("tweet 1");
-        t1.setDate(new Date());
+        Tweet tweet = new Tweet();
+        tweet.setOpinion("Test tweet");
 
-        User user = userRepository.findByUsername("roxanne");
+        TweetCommand tweetSaved = tweetService.save(tweetMapper.tweetToTweetCommand(tweet));
 
-        t1.setUser(user);
-        tweetRepository.save(t1);
-
-
-        Tweet tweetFromDb = tweetRepository.findById(3L).get();
-
-        assertEquals(tweetFromDb.getId(), t1.getId());
-        assertEquals(tweetFromDb.getOpinion(), t1.getOpinion());
+        assertNotNull(tweetService.findTweetById(tweetSaved.getId()));
+        assertEquals(tweetService.findTweetById(tweetSaved.getId()), tweetSaved);
     }
 
 
@@ -118,17 +114,17 @@ public class TweetServiceIT {
     @Transactional
     @Test
     public void dtestUpdateTweet() throws Exception {
-        //testSavingTweet();
+        Tweet tweet = new Tweet();
+        tweet.setOpinion("Test tweet");
 
-        TweetCommand tweetCommand = new TweetCommand();
-        tweetCommand.setOpinion("This is edited");
+        TweetCommand tweetSaved = tweetService.save(tweetMapper.tweetToTweetCommand(tweet));
 
-        TweetCommand tweetCommandSaved = tweetService.editTweet(2L, tweetCommand);
+        TweetCommand newTweet = new TweetCommand();
+        newTweet.setOpinion("Test tweet edited");
 
-        //Tweet tweetFromDb = tweetRepository.findById(1L).get();
-        TweetCommand tweetFromDb = tweetService.findTweetById(2L);
-        assertEquals(tweetFromDb.getOpinion(), new String("This is edited"));
-        assertEquals(tweetFromDb.getOpinion(), tweetCommandSaved.getOpinion());
+        TweetCommand tweetSavedEdited = tweetService.editTweet(tweetSaved.getId(), newTweet);
+
+        assertEquals(tweetSavedEdited.getOpinion(), "Test tweet edited");
 
     }
 
@@ -141,16 +137,9 @@ public class TweetServiceIT {
         tweet.setOpinion("Test tweet");
 
 
-        User user = new User();
-        user.setUsername("dummyuser");
-        UserCommand userCommand = userService.createNewUser(userMapper.userToUserCommand(user));
+        TweetCommand savedTweet = tweetService.save(tweetMapper.tweetToTweetCommand(tweet));
 
-
-        tweet.setUser(user);
-
-        TweetCommand tweetCommand = tweetService.save(tweetMapper.tweetToTweetCommand(tweet), userCommand);
-
-        tweetService.deleteTweet(tweetCommand.getId());
+        tweetService.deleteTweet(savedTweet.getId());
 
         Long finalCount = Long.valueOf(tweetService.findAllTweets().size());
 
