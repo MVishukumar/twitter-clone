@@ -27,16 +27,38 @@
             crossorigin="anonymous"
             th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
 
-
+    <script src="https://kit.fontawesome.com/cf4fb83f05.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <div class="container">
-        <h4 th:text="${welcome.message}">Welcome</h4>
+<body class="container p-3 my-3 bg-dark text-white">
+    <div class="row">
+    </div>
+    <div class="row">
+        <div class="col-sm-8  d-flex justify-content-lg-center mt-5 pt-5">
+            <div class="align-self-center">
+                <h1 class="display-4">Twitter-Clone</h1>
+                <p>A Spring Boot Project to cover various aspects of Spring Framework</p>
 
-        <br>
 
-        <a th:href="@{'/tweets/'}">View all tweets</a>
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <a class="btn btn-primary" href="https://github.com/MVishukumar/twitter-clone" target="_blank">
+                            <i class="fab fa-github"></i> View project on github
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="btn btn-primary" th:href="@{'/tweets/'}" href="#">
+                            <i class="fab fa-java"></i> Go to application
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+
     </div>
 
 </body>
+
 </html>
