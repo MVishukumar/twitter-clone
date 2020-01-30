@@ -21,6 +21,9 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"
             th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
+
+    <script src="https://kit.fontawesome.com/cf4fb83f05.js" crossorigin="anonymous"></script>
+
 </head>
 <body class="bg-light">
     <div class="container">
@@ -65,21 +68,6 @@
 
                                 <tr>
                                     <td>
-                                        <div class="container">
-                                            <form th:object="${commentcommand}" th:action="@{/tweet/} + ${command.getId()} + @{/comment}" method="post">
-                                                <div class="form-group">
-                                                    <input type="hidden" th:field="*{id}"/>
-                                                    <label for="exampleFormControlTextarea1"><strong>Add Comment</strong></label>
-                                                    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{commentDescription}" rows="3" placeholder="Want to add comment...?"></textarea>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary mb-2">Post Comment</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
                                         <h6>Comments</h6>
                                     </td>
                                 </tr>
@@ -105,6 +93,23 @@
                                         </div>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="container">
+                                            <form th:object="${commentcommand}" th:action="@{/tweet/} + ${command.getId()} + @{/comment}" method="post">
+                                                <div class="form-group">
+                                                    <input type="hidden" th:field="*{id}"/>
+                                                    <label for="exampleFormControlTextarea1"><strong>Add Comment</strong></label>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{commentDescription}" rows="3" placeholder="Want to add comment...?"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary mb-2"><i class="far fa-comment"></i> Post Comment</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
 
                             </tbody>
                         </table>
