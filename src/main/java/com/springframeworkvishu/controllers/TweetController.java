@@ -49,6 +49,12 @@ public class TweetController {
 
         model.addAttribute("welcome", welcome);
 
+        //return "tweet/welcome";
+        return "tweet/landingpage";
+    }
+
+    @RequestMapping({"/intro"})
+    public String serveIntroductionPage(Model model) {
         return "tweet/welcome";
     }
 
@@ -263,6 +269,6 @@ public class TweetController {
         CommentCommand commentSaved = commentService.createNewComment(commentCommand, userCommand, tweetCommand);
 
         log.debug("DODO: New comment saved with ID: " + commentSaved.getId());
-        return "redirect:/";
+        return "redirect:/tweets";
     }
 }
