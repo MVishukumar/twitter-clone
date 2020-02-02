@@ -1,0 +1,16 @@
+1. Run mysql docker
+docker run --name m-mysql -p 3306:3306 -h localhost -e MYSQL_ROOT_PASSWORD=root -d mysql:latest
+
+2. Enter into the docker mysql shell
+docker exec -it m-mysql bash
+
+3. To generate docker image from this project, run maven package goal first
+    mvn clean package.
+
+4. Run docker build package.
+    mvn docker:build
+
+docker:build command will create the image and can be seen by running 'docker images' command.
+
+5. To run the docker container user docker:start
+    mvn clean package docker:start

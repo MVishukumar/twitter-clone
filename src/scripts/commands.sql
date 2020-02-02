@@ -1,9 +1,3 @@
---Run mysql docker
-docker run --name m-mysql -p 3306:3306 -h localhost -e MYSQL_ROOT_PASSWORD=root -d mysql:latest
-
---Enter into the docker mysql shell
-docker exec -it m-mysql bash
-
 --Connect to databse
 mysql -u root -p
 
