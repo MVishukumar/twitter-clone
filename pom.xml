@@ -19,6 +19,11 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<org.mapstruct.version>1.2.0.CR2</org.mapstruct.version>
 		<java.version>1.8</java.version>
+		<!--set this to your docker acct name-->
+		<docker.image.prefix>beingvishu</docker.image.prefix>
+
+		<!--Set to name of project-->
+		<docker.image.name>twitter-clone</docker.image.name>
 	</properties>
 
 	<dependencies>
@@ -59,6 +64,12 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>4.4.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.webjars</groupId>
+					<artifactId>jquery</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -156,6 +167,36 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.20.0</version>
+
+				<configuration>
+
+					<!--<dockerHost>http://127.0.0.1:2375</dockerHost>-->
+					<dockerHost>unix:///var/run/docker.sock</dockerHost>
+
+					<verbose>true</verbose>
+					<images>
+						<image>
+							<name>${docker.image.prefix}/${docker.image.name}</name>
+							<build>
+								<dockerFileDir>${project.basedir}/src/main/docker/</dockerFileDir>
+
+								<!--copies artficact to docker build dir in target-->
+								<assembly>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<tags>
+									<tag>latest</tag>
+									<tag>${project.version}</tag>
+								</tags>
+							</build>
+						</image>
+					</images>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
